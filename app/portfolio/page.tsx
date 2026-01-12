@@ -6,7 +6,8 @@ import Script from 'next/script';
 import { 
   Search, 
   ExternalLink, 
-  Github, 
+  Github,
+  Instagram, 
   Code2, 
   Database, 
   Server, 
@@ -302,8 +303,8 @@ export default function PortfolioPage() {
             Solicitar Orçamento
           </button>
           <div className="flex justify-center gap-4 mt-6">
-            <Github className="text-neutral-500 hover:text-white cursor-pointer transition-colors" size={20} />
-            <ExternalLink className="text-neutral-500 hover:text-white cursor-pointer transition-colors" size={20} />
+            <Github onClick={() => window.open("https://github.com/CheckMat007", "_blank")} className="text-neutral-500 hover:text-white cursor-pointer transition-colors" size={20} />
+            <Instagram onClick={() => window.open("https://instagram.com/levbrands", "_blank")} className="text-neutral-500 hover:text-white cursor-pointer transition-colors" size={20} />
           </div>
         </div>
       </aside>
