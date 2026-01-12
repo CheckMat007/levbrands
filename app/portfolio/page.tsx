@@ -47,7 +47,35 @@ const PROJECTS = [
     link: "https://www.m2projecta.com.br",
     repo: null
   },
-  
+
+  {
+  "id": 2,
+  "title": "ATCO Manager - Gestão de Tráfego Aéreo",
+  "category": "SaaS B2G / Enterprise",
+  "image": "/atco.jpeg",
+  "shortDesc": "Plataforma SaaS Multi-tenant para gestão crítica de escalas operacionais, fadiga humana e conformidade militar.",
+  "clientGoal": "Substituir planilhas manuais e processos fragmentados em órgãos de controle de tráfego aéreo, garantindo conformidade rigorosa com regras de descanso, automação de trocas e auditoria forense de todas as ações.",
+  "solution": "Desenvolvemos uma aplicação full-stack de alta disponibilidade focada em segurança e precisão. O sistema implementa um 'Solver Inteligente' para alocação de turnos, validação temporal de regras de fadiga e um fluxo de aprovação hierárquico com trilha de auditoria imutável.",
+  "challenges": "Modelar regras de negócio complexas como 'Deslocamento Temporal Reverso' para turnos noturnos em fusos diferentes (Smart UTC), criar uma grelha de escala interativa com performance otimizada (UI Otimista) e garantir isolamento estrito de dados entre organizações militares (Multi-tenancy).",
+  "results": "Redução drástica no tempo de planejamento de escalas, eliminação de erros humanos no cálculo de repouso regulamentar e transparência total nas trocas de turno, elevando o nível de prontidão operacional.",
+  "techs": ["Next.js 14", "TypeScript", "Prisma ORM", "PostgreSQL (Supabase)", "NextAuth.js", "Tailwind CSS", "Shadcn UI", "Zod", "Date-fns"],
+  "link": null,
+  "repo": null
+},
+ {
+  "id": 3,
+  "title": "Landing Page & Sistema de Gestão",
+  "category": "Web App / Small Business Management",
+  "image": "/oficina.jpeg", 
+  "shortDesc": "Solução híbrida integrando Landing Page de alta conversão e Dashboard Administrativo para gestão de ordens de serviço, estoque e equipe.",
+  "clientGoal": "Site de demonstração focado em modernizar a presença digital de mpresas como oficinas para captação de novos clientes premium e, simultaneamente, digitalizar o controle interno operacional, eliminando o uso de fichas de papel e centralizando a gestão de peças e funilaria.",
+  "solution": "Desenvolvimento de uma Single Page Application (SPA) de demonstração responsiva utilizando Next.js e React. Implementamos uma arquitetura de 'State-Based Routing' para transição instantânea entre a área pública e o painel privado. A interface utiliza Tailwind CSS para estilização rápida e consistente, com componentes modulares tipados estritamente.",
+  "challenges": "Unificar contextos distintos (Marketing vs. Admin) em uma única base de código performática. O principal desafio técnico foi estruturar o polimorfismo dos dados no Dashboard para que uma única interface pudesse renderizar e manipular tipos distintos (Veículos, Estoque, Equipe) mantendo a segurança de tipos do TypeScript.",
+  "results": "Uma aplicação leve e de carregamento instantâneo que serve tanto como vitrine para vendas quanto como ferramenta de trabalho diário. A estrutura de dados (Mock Data) foi arquitetada para ser facilmente substituída por uma API REST real, garantindo escalabilidade futura.",
+  "techs": ["React", "Next.js (Client)", "TypeScript", "Tailwind CSS", "Lucide React", "Mock State Logic"],
+  "link": "https://oficina-demo.vercel.app/",
+  "repo": "https://github.com/CheckMat007/oficina-demo"
+}
 ];
 
 /* --- COMPONENTES --- */

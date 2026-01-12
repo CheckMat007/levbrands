@@ -4,14 +4,12 @@ import React, { useState, useEffect, useRef, MouseEvent } from 'react';
 import { 
   Code, Layout, BarChart, Users, Zap, MessageCircle, 
   ArrowRight, Menu, X, Database, Monitor, Github, Linkedin, Instagram, 
-  
 } from 'lucide-react';
 
 /**
  * UTILS & HOOKS
  */
 
-// Hook para seguir o mouse
 const useMousePosition = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   useEffect(() => {
@@ -28,7 +26,6 @@ const useMousePosition = () => {
  * COMPONENTES VISUAIS
  */
 
-// Cartão com efeito "Spotlight" (brilho que segue o mouse)
 const SpotlightCard = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => {
   const divRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -63,51 +60,6 @@ const SpotlightCard = ({ children, className = "" }: { children: React.ReactNode
   );
 };
 
-// Mockup Abstrato de Interface (Para as Prévias)
-const ProjectMockup = ({ type }: { type: 'dashboard' | 'mobile' | 'web' }) => {
-  if (type === 'dashboard') {
-    return (
-      <div className="w-full h-48 bg-neutral-800 rounded-lg p-3 flex flex-col gap-2 overflow-hidden border border-white/5 opacity-80 group-hover:opacity-100 transition-opacity">
-        <div className="flex gap-2 mb-2">
-          <div className="w-20 h-full bg-neutral-700 rounded animate-pulse" />
-          <div className="flex-1 flex flex-col gap-2">
-            <div className="w-full h-8 bg-neutral-700 rounded opacity-50" />
-            <div className="flex gap-2">
-              <div className="w-1/2 h-20 bg-neutral-700/50 rounded" />
-              <div className="w-1/2 h-20 bg-neutral-700/50 rounded" />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-  if (type === 'mobile') {
-    return (
-      <div className="flex justify-center h-48">
-        <div className="w-24 h-full bg-neutral-800 rounded-xl border-4 border-neutral-700 p-1 flex flex-col gap-1">
-          <div className="w-full h-1/2 bg-neutral-700/50 rounded-lg" />
-          <div className="w-full h-2 bg-neutral-600 rounded-full" />
-          <div className="w-full h-2 bg-neutral-600 rounded-full" />
-        </div>
-      </div>
-    );
-  }
-  return (
-    <div className="w-full h-48 bg-neutral-800 rounded-t-lg border-t-8 border-x-8 border-neutral-700 relative overflow-hidden group-hover:-translate-y-2 transition-transform duration-500">
-      <div className="w-full h-6 bg-neutral-700 flex items-center gap-1 px-2 mb-2">
-        <div className="w-2 h-2 rounded-full bg-red-500" />
-        <div className="w-2 h-2 rounded-full bg-yellow-500" />
-        <div className="w-2 h-2 rounded-full bg-green-500" />
-      </div>
-      <div className="p-4 grid grid-cols-3 gap-2">
-        <div className="col-span-2 h-24 bg-neutral-600/30 rounded" />
-        <div className="h-24 bg-neutral-600/30 rounded" />
-      </div>
-    </div>
-  );
-};
-
-// Animação de Scroll
 const RevealOnScroll = ({ children, delay = 0, width = "100%" }: { children: React.ReactNode, delay?: number, width?: string }) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -134,7 +86,6 @@ const RevealOnScroll = ({ children, delay = 0, width = "100%" }: { children: Rea
   );
 };
 
-// Faixa Infinita (Marquee)
 const InfiniteMarquee = () => {
   return (
     <div className="relative flex overflow-x-hidden bg-white text-black py-3 border-y border-white/10 select-none">
@@ -152,14 +103,21 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const mousePos = useMousePosition();
 
-  // Controle da Navbar
+  // Bloquear scroll do body quando o menu mobile estiver aberto
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [mobileMenuOpen]);
+
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Analytics Loader (Substituindo next/script)
   useEffect(() => {
     const script = document.createElement('script');
     script.src = "https://www.googletagmanager.com/gtag/js?id=G-Q97SRMMPT7";
@@ -181,11 +139,22 @@ export default function Home() {
     }
   }, []);
 
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setMobileMenuOpen(false);
+  const handleNavigation = (target: string) => {
+    setMobileMenuOpen(false);
+    
+    if (target.startsWith('/') || target.startsWith('http')) {
+      window.location.href = target.toLowerCase();
+      return;
+    }
+
+    if (target === 'Projetos') {
+      window.location.href = '/portfolio';
+    } else {
+      const id = target.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 
@@ -198,13 +167,8 @@ export default function Home() {
     { icon: <Database size={28} />, title: "APIs & Integrações", desc: "Conexão entre ferramentas." }
   ];
 
-  const projects = [
-    { title: "Dashboard Financeiro", cat: "SaaS / Fintech", type: "dashboard" as const, desc: "Painel administrativo para gestão de ativos." },
-    { title: "App Delivery", cat: "Mobile Web", type: "mobile" as const, desc: "PWA focado em experiência do usuário mobile." },
-    { title: "E-commerce Premium", cat: "Web", type: "web" as const, desc: "Loja virtual de alta performance." }
-  ];
-
   const whatsappLink = "https://wa.me/5592984228634?text=Olá!%20Vi%20seu%20site%20e%20quero%20escalar%20meu%20negócio.";
+  const menuItems = ['Serviços', 'Sobre', 'Projetos'];
 
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black overflow-x-hidden relative">
@@ -236,59 +200,58 @@ export default function Home() {
 
       {/* Navbar */}
       <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-black/80 backdrop-blur-md border-b border-white/10 py-4' : 'bg-transparent py-6'}`}>
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-          <div className="text-2xl font-bold tracking-tighter cursor-pointer flex items-center gap-2" onClick={() => scrollToSection('hero')}>
+        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center relative z-50">
+          <div className="text-2xl font-bold tracking-tighter cursor-pointer flex items-center gap-2" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
             <div>LEV <span className="font-light text-neutral-400">BRANDS</span></div>
           </div>
 
           <div className="hidden md:flex items-center space-x-8 text-sm font-medium text-neutral-300">
-  {['Serviços', 'Sobre', 'Projetos'].map((item) => (
-    <button
-      key={item}
-      onClick={() => {
-        // VERIFICAÇÃO ADICIONADA AQUI:
-        if (item === 'Projetos') {
-          window.location.href = '/portfolio'; // Leva para a página de portfólio
-        } else {
-          // Mantém o comportamento original para 'Serviços' e 'Sobre'
-          scrollToSection(item.toLowerCase().replace('ç', 'c').replace('õ', 'o'));
-        }
-      }}
-      className="hover:text-white transition-colors relative group"
-    >
-      {item}
-      <span className="absolute -bottom-1 left-0 w-0 h-px bg-white transition-all group-hover:w-full"></span>
-    </button>
-  ))}
-  
-  <button
-    onClick={() => window.open(whatsappLink, '_blank')}
-    className="bg-white text-black px-5 py-2 rounded-full font-bold hover:bg-neutral-200 transition-all flex items-center gap-2 text-sm hover:scale-105 active:scale-95"
-  >
-    Iniciar Projeto <ArrowRight size={14} />
-  </button>
-</div>
+            {menuItems.map((item) => (
+              <button
+                key={item}
+                onClick={() => handleNavigation(item)}
+                className="hover:text-white transition-colors relative group"
+              >
+                {item}
+                <span className="absolute -bottom-1 left-0 w-0 h-px bg-white transition-all group-hover:w-full"></span>
+              </button>
+            ))}
+            
+            <button
+              onClick={() => window.open(whatsappLink, '_blank')}
+              className="bg-white text-black px-5 py-2 rounded-full font-bold hover:bg-neutral-200 transition-all flex items-center gap-2 text-sm hover:scale-105 active:scale-95"
+            >
+              Iniciar Projeto <ArrowRight size={14} />
+            </button>
+          </div>
 
-          <div className="md:hidden text-white cursor-pointer" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+          <div className="md:hidden text-white cursor-pointer z-50 p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            {mobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        <div className={`fixed inset-0 bg-black z-40 flex flex-col items-center justify-center gap-8 transition-transform duration-300 md:hidden ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-           {['Sobre', 'Serviços', 'Projetos', 'Processo'].map((item) => (
-              <button key={item} onClick={() => scrollToSection(item.toLowerCase())} className="text-2xl font-bold hover:text-neutral-400">
+        {/* Mobile Menu - Fixed to viewport with Background Fix */}
+        <div className={`fixed inset-0 w-full h-dvh bg-black z-40 flex flex-col items-center justify-center gap-8 transition-all duration-500 md:hidden ${mobileMenuOpen ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-full'}`}>
+            {menuItems.map((item) => (
+              <button 
+                key={item} 
+                onClick={() => handleNavigation(item)} 
+                className="text-4xl font-bold hover:text-neutral-400 transition-colors tracking-tighter"
+              >
                 {item}
               </button>
             ))}
-            <button onClick={() => window.open(whatsappLink, '_blank')} className="bg-white text-black px-8 py-3 rounded-full font-bold">Falar no WhatsApp</button>
+            <button 
+              onClick={() => { window.open(whatsappLink, '_blank'); setMobileMenuOpen(false); }} 
+              className="mt-6 bg-white text-black px-10 py-4 rounded-full font-bold text-lg shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+            >
+              Falar no WhatsApp
+            </button>
         </div>
       </nav>
 
       {/* Hero Section */}
       <section id="hero" className="relative z-10 pt-32 pb-20 md:pt-48 md:pb-32 px-6 overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-125 h-125 bg-white/5 rounded-full blur-[100px] pointer-events-none" />
-        
         <div className="max-w-5xl mx-auto text-center relative">
           <RevealOnScroll>
             <div className="inline-flex items-center gap-2 px-3 py-1 mb-8 border border-white/10 rounded-full bg-white/5 backdrop-blur-md">
@@ -315,8 +278,9 @@ export default function Home() {
               >
                 <Zap size={20} className="fill-black" /> Solicitar Orçamento
               </button>
+              
               <button 
-                onClick={() => scrollToSection('projetos')}
+                onClick={() => handleNavigation('/portfolio')}
                 className="w-full sm:w-auto px-8 py-4 border border-white/20 text-white rounded hover:bg-white/5 transition-all flex items-center justify-center gap-2 hover:border-white/50"
               >
                 Ver Portfólio
@@ -326,10 +290,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Marquee Section */}
       <InfiniteMarquee />
-
-      
 
       {/* Services Section */}
       <section id="servicos" className="relative z-10 py-24 px-6">
@@ -361,31 +322,25 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stats / Process Mini Section */}
+      {/* Stats Section */}
       <section id="sobre" className="relative z-10 py-20 px-6 border-y border-white/5 bg-neutral-900/20">
         <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-8 text-center md:text-left divide-y md:divide-y-0 md:divide-x divide-white/10">
-          <div className="p-4">
-            <h3 className="text-4xl font-bold text-white mb-1">+50</h3>
-            <p className="text-neutral-500 text-sm uppercase tracking-wider">Projetos Entregues</p>
-          </div>
-          <div className="p-4">
-            <h3 className="text-4xl font-bold text-white mb-1">24/7</h3>
-            <p className="text-neutral-500 text-sm uppercase tracking-wider">Suporte Dedicado</p>
-          </div>
-          <div className="p-4">
-             <h3 className="text-4xl font-bold text-white mb-1">100%</h3>
-             <p className="text-neutral-500 text-sm uppercase tracking-wider">No Prazo</p>
-          </div>
-          <div className="p-4">
-            <h3 className="text-4xl font-bold text-white mb-1">Global</h3>
-            <p className="text-neutral-500 text-sm uppercase tracking-wider">Atuação Remota</p>
-          </div>
+          {[
+            { label: "Projetos Entregues", val: "+50" },
+            { label: "Suporte Dedicado", val: "24/7" },
+            { label: "No Prazo", val: "100%" },
+            { label: "Atuação Remota", val: "Global" }
+          ].map((stat, i) => (
+            <div key={i} className="p-4">
+              <h3 className="text-4xl font-bold text-white mb-1">{stat.val}</h3>
+              <p className="text-neutral-500 text-sm uppercase tracking-wider">{stat.label}</p>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* CTA Section */}
       <section className="relative z-10 py-32 px-6 overflow-hidden">
-        <div className="absolute inset-0 bg-linear-to-b from-transparent to-neutral-900/50 pointer-events-none"></div>
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <RevealOnScroll>
             <h2 className="text-4xl md:text-7xl font-bold mb-8 text-white tracking-tighter">
@@ -404,20 +359,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer Minimalista */}
+      {/* Footer */}
       <footer className="relative z-10 bg-black border-t border-white/10 pt-16 pb-8 px-6 text-sm">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 mb-12">
-          <div className="text-center md:text-left">
-            <h2 className="text-2xl font-bold tracking-tighter text-white mb-2 flex items-center gap-2">
-               
-               LEV BRANDS
-            </h2>
+          <div className="text-center md:text-left font-bold text-2xl tracking-tighter">
+            LEV BRANDS
           </div>
-
           <div className="flex gap-6 items-center">
             <a href="https://github.com/CheckMat007" target="_blank" className="text-neutral-500 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full"><Github size={20} /></a>
             <a href="https://instagram.com/levbrands" target="_blank" className="text-neutral-500 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full"><Instagram size={20} /></a>
-            <a href="www.linkedin.com/in/gustavolevenhagen" target="_blank" className="text-neutral-500 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full"><Linkedin size={20} /></a>
+            <a href="https://linkedin.com/in/gustavolevenhagen" target="_blank" className="text-neutral-500 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full"><Linkedin size={20} /></a>
           </div>
         </div>
         <div className="max-w-7xl mx-auto text-center text-neutral-600 border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center">
@@ -425,8 +376,6 @@ export default function Home() {
           <p className="flex items-center gap-2 mt-2 md:mt-0"><Code size={12} /> Desenvolvido com Next.js & Tailwind</p>
         </div>
       </footer>
-
-      
     </div>
   );
 }
