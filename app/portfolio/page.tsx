@@ -73,8 +73,22 @@ const PROJECTS = [
   "challenges": "Unificar contextos distintos (Marketing vs. Admin) em uma única base de código performática. O principal desafio técnico foi estruturar o polimorfismo dos dados no Dashboard para que uma única interface pudesse renderizar e manipular tipos distintos (Veículos, Estoque, Equipe) mantendo a segurança de tipos do TypeScript.",
   "results": "Uma aplicação leve e de carregamento instantâneo que serve tanto como vitrine para vendas quanto como ferramenta de trabalho diário. A estrutura de dados (Mock Data) foi arquitetada para ser facilmente substituída por uma API REST real, garantindo escalabilidade futura.",
   "techs": ["React", "Next.js (Client)", "TypeScript", "Tailwind CSS", "Lucide React", "Mock State Logic"],
-  "link": "https://oficina-demo.vercel.app/",
+  "link": "/portfolio/projetos/oficina",
   "repo": "https://github.com/CheckMat007/oficina-demo"
+},
+{
+  "id": 4,
+  "title": "Landing Page para Clínicas, Barbearias e Escritótios",
+  "category": "Landing Page",
+  "image": "/landingpage-demo.jpeg", 
+  "shortDesc": "Modelo de Landing Page moderna e responsiva, ideal para clínicas, barbearias e escritórios que buscam atrair clientes premium com diferencial de agendamentos automáticos.",
+  "clientGoal": "Site de demonstração focado em mostrar como pequenas empresas podem se destacar no mercado digital, oferecendo uma experiência de usuário fluida e profissional, com foco em conversão através de agendamentos online e apresentação clara dos serviços.",
+  "solution": "Desenvolvimento de uma Single Page Application (SPA) de demonstração responsiva utilizando Next.js e React. Implementamos uma arquitetura de Switch de Seções para navegação fluida. A interface utiliza Tailwind CSS para estilização rápida e consistente, com componentes modulares tipados estritamente.",
+  "challenges": "Incluir em uma única página modelos diferentes para nichos diferentes, utilizando Framer Motion para animações suaves entre seções. O principal desafio técnico foi estruturar o polimorfismo dos dados para que uma única interface pudesse renderizar conteúdos distintos (Clínica, Barbearia, Escritório) mantendo a segurança de tipos do TypeScript.",
+  "results": "Uma aplicação leve e de carregamento instantâneo que serve tanto como vitrine para vendas quanto como demonstração das possibilidades de estilização e funcionalidade. A estrutura de dados (Mock Data) foi arquitetada para ser facilmente substituída por uma API REST real, garantindo escalabilidade futura.",
+  "techs": ["React", "Next.js (Client)", "TypeScript", "Tailwind CSS", "Lucide React", "Framer Motion"],
+  "link": "/portfolio/projetos/landingpage-demo",
+  "repo": "https://github.com/CheckMat007/landingpage-demo"
 }
 ];
 
