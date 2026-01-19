@@ -89,6 +89,20 @@ const PROJECTS = [
   "techs": ["React", "Next.js (Client)", "TypeScript", "Tailwind CSS", "Lucide React", "Framer Motion"],
   "link": "/portfolio/projetos/landingpage-demo",
   "repo": "https://github.com/CheckMat007/landingpage-demo"
+},
+{
+  "id": 5,
+  "title": "Landing Page Médica - Clínica Vida & Saúde",
+  "category": "Landing Page",
+  "image": "/clinica-demo.jpeg", 
+  "shortDesc": "Landing Page de alta conversão para área da saúde, com design clean, 'Mobile First' e foco total em agendamento de consultas via WhatsApp e formulário.",
+  "clientGoal": "Modernizar a presença digital da clínica com um site rápido e responsivo, focado na experiência do paciente mobile. O objetivo principal era reduzir a fricção no agendamento de consultas e transmitir autoridade através da apresentação do corpo clínico e especialidades.",
+  "solution": "A aplicação foi estruturada como uma Single Page Application (SPA) para carregamento instantâneo. Utilizamos Tailwind CSS para garantir responsividade perfeita em celulares e React Hooks (useState, useEffect) para gerenciar interatividades como menus, modais de confirmação e efeitos de scroll na navbar.",
+  "challenges": "O principal desafio foi adaptar o código para funcionar perfeitamente em um arquivo único mantendo a organização, e corrigir problemas de sobreposição (z-index) e espaçamentos no mobile. Além disso, foi implementado um sistema de feedback visual (Modal de Sucesso) sem depender de bibliotecas externas pesadas.",
+  "results": "Uma página extremamente leve, com navegação fluida (Scroll Smooth) e visualmente impactante. A versão mobile ficou 100% otimizada, com botões de ação (CTA) acessíveis e um menu hambúrguer intuitivo. O formulário agora possui validação de estado e feedback instantâneo para o usuário.",
+  "techs": ["React", "Next.js", "TypeScript", "Tailwind CSS", "FontAwesome (CDN)", "CSS Animations"],
+  "link": "/portfolio/projetos/clinica-demo",
+  "repo": "https://github.com/CheckMat007/"
 }
 ];
 
