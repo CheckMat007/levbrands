@@ -246,7 +246,7 @@ export default function DecmoblyPage() {
               onClick={() => handleNavigate('login')} 
               className="block w-full text-left py-3 text-[#5c4d3c] font-bold mt-2"
             >
-              Área do Cliente
+              Área Restrita
             </button>
           </div>
         )}
@@ -556,7 +556,7 @@ export default function DecmoblyPage() {
             <p className="text-xs text-gray-500 mb-4">Esta versão foi desenvolvida para demonstrar o funcionamento do projeto.</p>
             <ul className="text-sm space-y-2 mb-4">
               <li className="flex items-center text-gray-700"><i className="ph ph-check text-green-500 mr-2"></i> Área de projetos interativa</li>
-              <li className="flex items-center text-gray-700"><i className="ph ph-check text-green-500 mr-2"></i> Modal de Detalhes (Novo!)</li>
+              <li className="flex items-center text-gray-700"><i className="ph ph-check text-green-500 mr-2"></i> Projetos com detalhes (Clique no card do projeto)</li>
               <li className="flex items-center text-gray-700"><i className="ph ph-check text-green-500 mr-2"></i> Painel de Gestão Completo</li>
             </ul>
             <button onClick={() => setDemoWidgetOpen(false)} className="absolute top-2 right-2 text-gray-400 hover:text-gray-600">
