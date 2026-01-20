@@ -36,7 +36,7 @@ const PROJECTS = [
   {
     id: 1,
     title: "M2 Projecta - Gestão & CRM",
-    category: "Sistema Web Full Stack",
+    category: "Sistema Web",
     image: "https://www.m2projecta.com.br/og-image.png",
     shortDesc: "Ecossistema digital completo com Vitrine, CRM Administrativo e Área do Cliente exclusiva.",
     clientGoal: "Modernizar a operação da empresa para eliminar processos manuais, centralizar a gestão de contratos e oferecer uma experiência profissional e segura para a entrega de arquivos aos clientes.",
@@ -50,22 +50,22 @@ const PROJECTS = [
 
   {
   "id": 2,
-  "title": "ATCO Manager - Gestão de Tráfego Aéreo",
-  "category": "SaaS B2G / Enterprise",
-  "image": "/atco.jpeg",
-  "shortDesc": "Plataforma SaaS Multi-tenant para gestão crítica de escalas operacionais, fadiga humana e conformidade militar.",
-  "clientGoal": "Substituir planilhas manuais e processos fragmentados em órgãos de controle de tráfego aéreo, garantindo conformidade rigorosa com regras de descanso, automação de trocas e auditoria forense de todas as ações.",
-  "solution": "Desenvolvemos uma aplicação full-stack de alta disponibilidade focada em segurança e precisão. O sistema implementa um 'Solver Inteligente' para alocação de turnos, validação temporal de regras de fadiga e um fluxo de aprovação hierárquico com trilha de auditoria imutável.",
-  "challenges": "Modelar regras de negócio complexas como 'Deslocamento Temporal Reverso' para turnos noturnos em fusos diferentes (Smart UTC), criar uma grelha de escala interativa com performance otimizada (UI Otimista) e garantir isolamento estrito de dados entre organizações militares (Multi-tenancy).",
-  "results": "Redução drástica no tempo de planejamento de escalas, eliminação de erros humanos no cálculo de repouso regulamentar e transparência total nas trocas de turno, elevando o nível de prontidão operacional.",
-  "techs": ["Next.js 14", "TypeScript", "Prisma ORM", "PostgreSQL (Supabase)", "NextAuth.js", "Tailwind CSS", "Shadcn UI", "Zod", "Date-fns"],
-  "link": null,
-  "repo": null
+  "title": "Decmobly - Sistema de Gestão & Landing Page",
+  "category": "Landing Page",
+  "image": "/decmobly-capa.jpeg", 
+  "shortDesc": "Solução completa para marcenaria de alto padrão: une uma Landing Page elegante para captação de clientes a um Painel Administrativo (Dashboard) para gestão dinâmica do portfólio de projetos.",
+  "clientGoal": "O objetivo era criar uma vitrine digital que transmitisse sofisticação (utilizando tipografia serifada e layout clean), mas que principalmente permitisse ao proprietário atualizar as fotos e descrições dos projetos realizados sem precisar editar código, dando autonomia total ao negócio.",
+  "solution": "Desenvolvi uma aplicação React com Next.js estruturada em visualizações dinâmicas (View Switching). A solução gerencia estados complexos para alternar entre a área pública, login e o painel administrativo. Implementei um CRUD (Create, Read, Delete) em tempo real via `useState`, permitindo adicionar projetos com título, categoria, imagem e descrição detalhada que aparecem instantaneamente na galeria principal.",
+  "challenges": "O principal desafio foi a arquitetura de dados e a UX. Precisei criar um sistema de Modal (Popup) que reaproveitasse o mesmo componente para diferentes projetos dinamicamente. Além disso, a implementação da lógica de autenticação simulada e a proteção de rotas (evitando acesso ao Admin sem login) exigiu um controle rigoroso dos estados da aplicação.",
+  "results": "Um sistema híbrido robusto. A Landing Page possui alta performance e design responsivo com menu mobile animado. O Painel Gestor é intuitivo, permitindo a gestão completa do conteúdo. A funcionalidade de 'Ver Detalhes' aumentou o engajamento visual, permitindo contar a história de cada móvel planejado.",
+  "techs": ["React", "Next.js", "TypeScript", "Tailwind CSS", "Phosphor Icons", "Google Fonts (Playfair & Lato)"],
+  "link": "/portfolio/projetos/marcenaria-demo",
+  "repo": "https://github.com/CheckMat007"
 },
  {
   "id": 3,
   "title": "Landing Page & Sistema de Gestão",
-  "category": "Web App / Small Business Management",
+  "category": "Sistema Web",
   "image": "/oficina.jpeg", 
   "shortDesc": "Solução híbrida integrando Landing Page de alta conversão e Dashboard Administrativo para gestão de ordens de serviço, estoque e equipe.",
   "clientGoal": "Site de demonstração focado em modernizar a presença digital de mpresas como oficinas para captação de novos clientes premium e, simultaneamente, digitalizar o controle interno operacional, eliminando o uso de fichas de papel e centralizando a gestão de peças e funilaria.",
@@ -78,7 +78,7 @@ const PROJECTS = [
 },
 {
   "id": 4,
-  "title": "Landing Page para Clínicas, Barbearias e Escritótios",
+  "title": "Landing Page para Clínicas, Barbearias e Escritórios",
   "category": "Landing Page",
   "image": "/landingpage-demo.jpeg", 
   "shortDesc": "Modelo de Landing Page moderna e responsiva, ideal para clínicas, barbearias e escritórios que buscam atrair clientes premium com diferencial de agendamentos automáticos.",
@@ -93,7 +93,7 @@ const PROJECTS = [
 {
   "id": 5,
   "title": "Landing Page Médica - Clínica Vida & Saúde",
-  "category": "Landing Page",
+  "category": "Site Institucional",
   "image": "/clinica-demo.jpeg", 
   "shortDesc": "Landing Page de alta conversão para área da saúde, com design clean, 'Mobile First' e foco total em agendamento de consultas via WhatsApp e formulário.",
   "clientGoal": "Modernizar a presença digital da clínica com um site rápido e responsivo, focado na experiência do paciente mobile. O objetivo principal era reduzir a fricção no agendamento de consultas e transmitir autoridade através da apresentação do corpo clínico e especialidades.",
@@ -103,7 +103,21 @@ const PROJECTS = [
   "techs": ["React", "Next.js", "TypeScript", "Tailwind CSS", "FontAwesome (CDN)", "CSS Animations"],
   "link": "/portfolio/projetos/clinica-demo",
   "repo": "https://github.com/CheckMat007/"
-}
+},
+{
+  "id": 6,
+  "title": "ATCO Manager - Gestão de Tráfego Aéreo",
+  "category": "Sistema Web",
+  "image": "/atco.jpeg",
+  "shortDesc": "Plataforma SaaS Multi-tenant para gestão crítica de escalas operacionais, fadiga humana e conformidade militar.",
+  "clientGoal": "Substituir planilhas manuais e processos fragmentados em órgãos de controle de tráfego aéreo, garantindo conformidade rigorosa com regras de descanso, automação de trocas e auditoria forense de todas as ações.",
+  "solution": "Desenvolvemos uma aplicação full-stack de alta disponibilidade focada em segurança e precisão. O sistema implementa um 'Solver Inteligente' para alocação de turnos, validação temporal de regras de fadiga e um fluxo de aprovação hierárquico com trilha de auditoria imutável.",
+  "challenges": "Modelar regras de negócio complexas como 'Deslocamento Temporal Reverso' para turnos noturnos em fusos diferentes (Smart UTC), criar uma grelha de escala interativa com performance otimizada (UI Otimista) e garantir isolamento estrito de dados entre organizações militares (Multi-tenancy).",
+  "results": "Redução drástica no tempo de planejamento de escalas, eliminação de erros humanos no cálculo de repouso regulamentar e transparência total nas trocas de turno, elevando o nível de prontidão operacional.",
+  "techs": ["Next.js 14", "TypeScript", "Prisma ORM", "PostgreSQL (Supabase)", "NextAuth.js", "Tailwind CSS", "Shadcn UI", "Zod", "Date-fns"],
+  "link": null,
+  "repo": null
+},
 ];
 
 /* --- COMPONENTES --- */
