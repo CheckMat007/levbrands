@@ -1,66 +1,15 @@
 "use client";
 
-import React, { useState, useEffect, useRef, MouseEvent } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Code, Layout, BarChart, Users, Zap, MessageCircle, 
-  ArrowRight, Menu, X, Database, Monitor, Github, Linkedin, Instagram, 
+  CheckCircle2, ArrowRight, Menu, X, ChevronDown, 
+  MessageCircle, Star, ShieldCheck, TrendingUp, Smartphone, 
+  Zap, Layout, Globe, ArrowUpRight
 } from 'lucide-react';
 
-/**
- * UTILS & HOOKS
- */
+/* --- COMPONENTES UTILITÁRIOS --- */
 
-const useMousePosition = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  useEffect(() => {
-    const updateMousePosition = (ev: MouseEvent | any) => {
-      setMousePosition({ x: ev.clientX, y: ev.clientY });
-    };
-    window.addEventListener('mousemove', updateMousePosition);
-    return () => window.removeEventListener('mousemove', updateMousePosition);
-  }, []);
-  return mousePosition;
-};
-
-/**
- * COMPONENTES VISUAIS
- */
-
-const SpotlightCard = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => {
-  const divRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [opacity, setOpacity] = useState(0);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!divRef.current) return;
-    const rect = divRef.current.getBoundingClientRect();
-    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-  };
-
-  const handleMouseEnter = () => setOpacity(1);
-  const handleMouseLeave = () => setOpacity(0);
-
-  return (
-    <div
-      ref={divRef}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className={`relative overflow-hidden rounded-xl border border-white/10 bg-neutral-900/50 ${className}`}
-    >
-      <div
-        className="pointer-events-none absolute -inset-px opacity-0 transition duration-300"
-        style={{
-          opacity,
-          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(255,255,255,0.1), transparent 40%)`,
-        }}
-      />
-      <div className="relative h-full">{children}</div>
-    </div>
-  );
-};
-
-const RevealOnScroll = ({ children, delay = 0, width = "100%" }: { children: React.ReactNode, delay?: number, width?: string }) => {
+const RevealOnScroll = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -78,21 +27,29 @@ const RevealOnScroll = ({ children, delay = 0, width = "100%" }: { children: Rea
   return (
     <div 
       ref={ref} 
-      style={{ width, transitionDelay: `${delay}s` }} 
-      className={`transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+      style={{ transitionDelay: `${delay}s` }} 
+      className={`transition-all duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'} ${className}`}
     >
       {children}
     </div>
   );
 };
 
-const InfiniteMarquee = () => {
+const FaqItem = ({ question, answer }: { question: string, answer: string }) => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className="relative flex overflow-x-hidden bg-white text-black py-3 border-y border-white/10 select-none">
-      <div className="animate-marquee whitespace-nowrap flex gap-8 items-center font-bold uppercase tracking-widest text-sm">
-        {Array(20).fill("Development • Design • Strategy • Performance • ").map((item, i) => (
-          <span key={i}>{item}</span>
-        ))}
+    <div className="border-b border-slate-100 last:border-0">
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full py-5 flex justify-between items-center text-left hover:text-blue-700 transition-colors text-slate-800 group"
+      >
+        <span className="font-semibold text-lg">{question}</span>
+        <span className={`p-2 rounded-full bg-slate-50 group-hover:bg-blue-50 transition-colors duration-300`}>
+          <ChevronDown className={`w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+        </span>
+      </button>
+      <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? 'max-h-96 opacity-100 pb-6' : 'max-h-0 opacity-0'}`}>
+        <p className="text-slate-600 leading-relaxed pr-8">{answer}</p>
       </div>
     </div>
   );
@@ -101,279 +58,335 @@ const InfiniteMarquee = () => {
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const mousePos = useMousePosition();
-
-  // Bloquear scroll do body quando o menu mobile estiver aberto
-  useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-  }, [mobileMenuOpen]);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    setMounted(true);
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = "https://www.googletagmanager.com/gtag/js?id=G-Q97SRMMPT7";
-    script.async = true;
-    document.body.appendChild(script);
+  const whatsappLink = "https://wa.me/5592984228634?text=Olá!%20Vi%20seu%20site%20e%20gostaria%20de%20um%20orçamento.";
 
-    const inlineScript = document.createElement('script');
-    inlineScript.innerHTML = `
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-Q97SRMMPT7');
-    `;
-    document.body.appendChild(inlineScript);
-
-    return () => {
-      if (document.body.contains(script)) document.body.removeChild(script);
-      if (document.body.contains(inlineScript)) document.body.removeChild(inlineScript);
+  const portfolioItems = [
+    {
+      title: "M2 Projecta",
+      desc: "Sistema de gestão que automatiza contratos e organiza o fluxo financeiro da empresa.",
+      image: "https://www.m2projecta.com.br/og-image.png", // Certifique-se que essa imagem existe ou troque
+      tag: "Gestão & CRM",
+      link: "https://www.m2projecta.com.br" // Link real do projeto
+    },
+    {
+      title: "Decmobly",
+      desc: "Site institucional moderno para loja de móveis do Amazonas, com foco em performance e SEO local.",
+      image: "/decmobly-capa.jpeg", // Substitua pelo caminho real
+      tag: "SEO LOCAL",
+      link: "https://www.decmobly.com.br"
     }
-  }, []);
-
-  const handleNavigation = (target: string) => {
-    setMobileMenuOpen(false);
-    
-    if (target.startsWith('/') || target.startsWith('http')) {
-      window.location.href = target.toLowerCase();
-      return;
-    }
-
-    if (target === 'Projetos') {
-      window.location.href = '/portfolio';
-    } else {
-      const id = target.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      const element = document.getElementById(id);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  };
-
-  const services = [
-    { icon: <Monitor size={28} />, title: "Sites Institucionais", desc: "Design premium e performance otimizada." },
-    { icon: <Layout size={28} />, title: "Landing Pages", desc: "Foco total em conversão e copywriting." },
-    { icon: <Code size={28} />, title: "Sistemas Web", desc: "Soluções SaaS e ferramentas internas." },
-    { icon: <BarChart size={28} />, title: "Dashboards", desc: "Visualização de dados em tempo real." },
-    { icon: <Users size={28} />, title: "Área do Cliente", desc: "Ambientes logados seguros." },
-    { icon: <Database size={28} />, title: "APIs & Integrações", desc: "Conexão entre ferramentas." }
   ];
 
-  const whatsappLink = "https://wa.me/5592984228634?text=Olá!%20Vi%20seu%20site%20e%20quero%20escalar%20meu%20negócio.";
-  const menuItems = ['Serviços', 'Sobre', 'Projetos'];
-
   return (
-    <div className="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black overflow-x-hidden relative">
-      <style jsx global>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-marquee {
-          animation: marquee 30s linear infinite;
-        }
-        .bg-grid {
-          background-size: 50px 50px;
-          background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                            linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-        }
-      `}</style>
-
-      {/* Dynamic Background */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-grid mask-[linear-gradient(to_bottom,transparent,black)]" />
-        <div 
-          className="absolute inset-0 bg-black/90 transition-colors duration-700"
-          style={{
-            background: `radial-gradient(800px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,255,255,0.06), transparent 40%)`
-          }}
-        />
-      </div>
-
-      {/* Navbar */}
-      <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-black/80 backdrop-blur-md border-b border-white/10 py-4' : 'bg-transparent py-6'}`}>
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center relative z-50">
-          <div className="text-2xl font-bold tracking-tighter cursor-pointer flex items-center gap-2" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
-            <div>LEV <span className="font-light text-neutral-400">BRANDS</span></div>
+    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900 overflow-x-hidden">
+      
+      {/* Navbar com efeito Glassmorphism refinado */}
+      <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-white/80 backdrop-blur-md shadow-sm border-b border-slate-200/50 py-3' : 'bg-transparent py-6'}`}>
+        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+          <div className="text-xl font-bold tracking-tighter text-slate-900 flex items-center gap-2">
+            <span>LEV<span className="font-light text-slate-500">BRANDS</span></span>
           </div>
 
-          <div className="hidden md:flex items-center space-x-8 text-sm font-medium text-neutral-300">
-            {menuItems.map((item) => (
-              <button
-                key={item}
-                onClick={() => handleNavigation(item)}
-                className="hover:text-white transition-colors relative group"
-              >
-                {item}
-                <span className="absolute -bottom-1 left-0 w-0 h-px bg-white transition-all group-hover:w-full"></span>
-              </button>
-            ))}
+          <div className="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600">
+            <a href="#portfolio" className="hover:text-blue-600 transition-colors">Portfólio</a>
+            <a href="#servicos" className="hover:text-blue-600 transition-colors">Serviços</a>
             
             <button
               onClick={() => window.open(whatsappLink, '_blank')}
-              className="bg-white text-black px-5 py-2 rounded-full font-bold hover:bg-neutral-200 transition-all flex items-center gap-2 text-sm hover:scale-105 active:scale-95"
+              className="bg-slate-900 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-slate-800 hover:shadow-lg hover:shadow-slate-200 transition-all flex items-center gap-2 text-xs uppercase tracking-wide"
             >
-              Iniciar Projeto <ArrowRight size={14} />
+              Orçamento
+              <ArrowRight size={14} />
             </button>
           </div>
 
-          <div className="md:hidden text-white cursor-pointer z-50 p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            {mobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
+          <div className="md:hidden z-50 text-slate-900 cursor-pointer p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            {mobileMenuOpen ? <X /> : <Menu />}
           </div>
         </div>
 
-        {/* Mobile Menu - Fixed to viewport with Background Fix */}
-        <div className={`fixed inset-0 w-full h-dvh bg-black z-40 flex flex-col items-center justify-center gap-8 transition-all duration-500 md:hidden ${mobileMenuOpen ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-full'}`}>
-            {menuItems.map((item) => (
-              <button 
-                key={item} 
-                onClick={() => handleNavigation(item)} 
-                className="text-4xl font-bold hover:text-neutral-400 transition-colors tracking-tighter"
-              >
-                {item}
-              </button>
-            ))}
-            <button 
-              onClick={() => { window.open(whatsappLink, '_blank'); setMobileMenuOpen(false); }} 
-              className="mt-6 bg-white text-black px-10 py-4 rounded-full font-bold text-lg shadow-[0_0_20px_rgba(255,255,255,0.2)]"
-            >
-              Falar no WhatsApp
-            </button>
+        {/* Mobile Menu Overlay */}
+        <div className={`fixed inset-0 bg-white z-40 flex flex-col items-center justify-center gap-8 transition-transform duration-300 ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+           <a href="#como-funciona" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-bold text-slate-800">Processo</a>
+           <a href="#portfolio" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-bold text-slate-800">Portfólio</a>
+           <a href="#faq" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-bold text-slate-800">Dúvidas</a>
+           <button onClick={() => window.open(whatsappLink, '_blank')} className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold w-3/4 text-lg shadow-xl shadow-blue-200">
+             Chamar no WhatsApp
+           </button>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section id="hero" className="relative z-10 pt-32 pb-20 md:pt-48 md:pb-32 px-6 overflow-hidden">
-        <div className="max-w-5xl mx-auto text-center relative">
-          <RevealOnScroll>
-            <div className="inline-flex items-center gap-2 px-3 py-1 mb-8 border border-white/10 rounded-full bg-white/5 backdrop-blur-md">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-              </span>
-              <span className="text-xs uppercase tracking-widest text-neutral-300 font-medium">Disponível para novos projetos</span>
-            </div>
+      {/* --- HERO SECTION ASSIMÉTRICA --- */}
+      <section className="relative w-full overflow-hidden bg-white pt-32 pb-20 lg:pt-40 lg:pb-32">
+        {/* Background Grid */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <div className="absolute inset-0 h-full w-full bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-size-[24px_24px]"></div>
+          <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-125 w-125 rounded-full bg-blue-100 opacity-50 blur-[100px]"></div>
+        </div>
+
+        <div className="container relative z-10 mx-auto px-6 max-w-7xl">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             
-            <h1 className="text-5xl md:text-8xl font-bold tracking-tighter leading-none mb-8">
-              Transformamos código <br />
-              <span className="bg-linear-to-r from-neutral-200 to-neutral-600 bg-clip-text text-transparent">em faturamento.</span>
-            </h1>
-            
-            <p className="text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto mb-10 font-light leading-relaxed">
-              Estúdio de desenvolvimento especializado em criar ecossistemas digitais de alta conversão. Design, estratégia e tecnologia em um só lugar.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button 
-                onClick={() => window.open(whatsappLink, '_blank')}
-                className="w-full sm:w-auto px-8 py-4 bg-white text-black font-bold rounded hover:bg-neutral-200 transition-all transform hover:scale-105 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.3)]"
-              >
-                <Zap size={20} className="fill-black" /> Solicitar Orçamento
-              </button>
+            {/* Esquerda: Copywriting */}
+            <div className={`flex flex-col items-start text-left transition-all duration-1000 ease-out transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
               
-              <button 
-                onClick={() => handleNavigation('/portfolio')}
-                className="w-full sm:w-auto px-8 py-4 border border-white/20 text-white rounded hover:bg-white/5 transition-all flex items-center justify-center gap-2 hover:border-white/50"
-              >
-                Ver Portfólio
-              </button>
+
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight text-slate-900 mb-6 leading-[1.1]">
+                Seu negócio merece um site que <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-700 to-indigo-600"> vende por você.</span>
+              </h1>
+
+              <p className="text-lg text-slate-600 mb-8 leading-relaxed max-w-lg">
+                Criamos experiências digitais sob medida que transmitem autoridade e convertem visitantes em clientes reais.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mb-10">
+                <button 
+                  onClick={() => window.open(whatsappLink, '_blank')}
+                  className="group px-8 py-4 bg-slate-900 text-white font-semibold rounded-xl hover:bg-slate-800 hover:shadow-lg hover:shadow-blue-900/10 transition-all flex items-center justify-center gap-3"
+                >
+                  <MessageCircle size={20} /> 
+                  Quero um orçamento
+                </button>
+                <a 
+                  href="#portfolio"
+                  className="px-8 py-4 text-slate-600 font-medium hover:text-blue-700 transition-colors flex items-center justify-center gap-2 group"
+                >
+                  Ver trabalhos
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                </a>
+              </div>
+
+              {/* Checkpoints */}
+              <div className="flex gap-6 text-sm text-slate-500 font-medium border-t border-slate-100 pt-6 w-full">
+                <div className="flex items-center gap-2"><CheckCircle2 size={16} className="text-blue-600"/> Otimizado para SEO</div>
+                <div className="flex items-center gap-2"><CheckCircle2 size={16} className="text-blue-600"/> Design Exclusivo</div>
+                <div className="flex items-center gap-2"><CheckCircle2 size={16} className="text-blue-600"/> Sistema de Gestão Integrado</div>
+              </div>
             </div>
-          </RevealOnScroll>
+
+            {/* Direita: Mockup 3D */}
+            <div className={`hidden lg:block relative transition-all duration-1000 delay-200 ease-out transform ${mounted ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
+              <div className="relative mx-auto w-full max-w-150" style={{ perspective: '1000px' }}>
+                {/* Elemento decorativo */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-linear-to-tr from-blue-100 to-indigo-50 rounded-full blur-3xl -z-10"></div>
+                
+                {/* O Mockup (Site Flutuante) */}
+                <div className="relative rounded-xl bg-white border border-slate-200 shadow-2xl shadow-blue-900/10 overflow-hidden transform -rotate-y-6 rotate-x-[4deg] hover:rotate-0 transition-transform duration-700 ease-out">
+                  <div className="bg-slate-50 border-b border-slate-100 px-4 py-3 flex items-center gap-2">
+                    <div className="flex gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-red-400"/><div className="w-2.5 h-2.5 rounded-full bg-amber-400"/><div className="w-2.5 h-2.5 rounded-full bg-green-400"/></div>
+                  </div>
+                  {/* IMPORTANTE: Coloque aqui o print do seu melhor site */}
+                  <div className="aspect-16/10 bg-slate-100 relative group overflow-hidden">
+                     {/* Placeholder - Substitua pelo SRC real */}
+                     <div className="w-full h-full flex items-center justify-center text-slate-400 bg-slate-50">
+                        <img src="/clinica-demo.png" alt="Site institucional para clínicas" className="object-cover w-full h-full opacity-80" />
+                     </div>
+                     {/* Reflexo Vidro */}
+                     <div className="absolute inset-0 bg-linear-to-tr from-white/20 to-transparent pointer-events-none"></div>
+                  </div>
+                </div>
+
+                {/* Card Flutuante Pequeno */}
+                <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-xl border border-slate-100 animate-bounce" style={{ animationDuration: '3s' }}>
+                  <div className="flex items-center gap-3">
+                    <div className="bg-green-100 p-2 rounded-lg text-green-600"><Smartphone size={20} /></div>
+                    <div>
+                      <p className="text-xs text-slate-500 font-medium">Responsivo</p>
+                      <p className="text-sm font-bold text-slate-900">Mobile First</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      <InfiniteMarquee />
+      
 
-      {/* Services Section */}
-      <section id="servicos" className="relative z-10 py-24 px-6">
+      {/* --- PORTFOLIO (Cards melhorados) --- */}
+      <section id="portfolio" className="py-24 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
-          <RevealOnScroll>
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-bold mb-4">Nossa Expertise</h2>
-              <p className="text-neutral-400 max-w-2xl mx-auto">
-                Soluções end-to-end para sua empresa.
-              </p>
+          <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+            <div>
+              <div className="text-blue-600 font-bold text-sm uppercase tracking-wider mb-2">Portfolio Selecionado</div>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900">Empresas reais, resultados reais.</h2>
             </div>
-          </RevealOnScroll>
+            <a href={whatsappLink} className="hidden md:flex items-center gap-2 text-slate-600 hover:text-blue-600 font-medium transition-colors">
+              Quero um site assim <ArrowRight size={16} />
+            </a>
+          </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map((service, index) => (
-              <RevealOnScroll key={index} delay={index * 0.05}>
-                <SpotlightCard className="h-full">
-                  <div className="p-8 h-full flex flex-col items-start hover:bg-white/5 transition-colors">
-                    <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center mb-6 text-white group-hover:scale-110 transition-transform duration-300">
-                      {service.icon}
+          <div className="grid md:grid-cols-3 gap-8">
+            {portfolioItems.map((project, i) => (
+              <RevealOnScroll key={i} delay={i * 0.1}>
+                <div className="group rounded-2xl overflow-hidden border border-slate-100 bg-white hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-500 h-full flex flex-col">
+                  {/* Imagem com Zoom suave */}
+                  <div className="relative aspect-4/3 overflow-hidden bg-slate-100">
+                    <img 
+                      src={project.image} 
+                      alt={project.title} 
+                      className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/10 transition-colors duration-300" />
+                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur text-xs font-bold px-3 py-1 rounded-full text-slate-800 shadow-sm">
+                      {project.tag}
                     </div>
-                    <h3 className="text-xl font-bold mb-3 text-white">{service.title}</h3>
-                    <p className="text-neutral-400 text-sm leading-relaxed">{service.desc}</p>
                   </div>
-                </SpotlightCard>
+                  
+                  <div className="p-6 flex-1 flex flex-col">
+                    <h3 className="text-xl font-bold text-slate-900 mb-2 flex items-center justify-between">
+                      {project.title}
+                      <ArrowUpRight size={18} className="text-slate-300 group-hover:text-blue-600 transition-colors" />
+                    </h3>
+                    <p className="text-slate-500 text-sm leading-relaxed mb-6 flex-1 border-b border-slate-100 pb-4">
+                      {project.desc}
+                    </p>
+                    <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 uppercase tracking-wide">
+                      <div className="w-2 h-2 rounded-full bg-green-500"></div> Online
+                    </div>
+                  </div>
+                </div>
               </RevealOnScroll>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section id="sobre" className="relative z-10 py-20 px-6 border-y border-white/5 bg-neutral-900/20">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-8 text-center md:text-left divide-y md:divide-y-0 md:divide-x divide-white/10">
-          {[
-            { label: "Projetos Entregues", val: "+50" },
-            { label: "Suporte Dedicado", val: "24/7" },
-            { label: "No Prazo", val: "100%" },
-            { label: "Atuação Remota", val: "Global" }
-          ].map((stat, i) => (
-            <div key={i} className="p-4">
-              <h3 className="text-4xl font-bold text-white mb-1">{stat.val}</h3>
-              <p className="text-neutral-500 text-sm uppercase tracking-wider">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="relative z-10 py-32 px-6 overflow-hidden">
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <RevealOnScroll>
-            <h2 className="text-4xl md:text-7xl font-bold mb-8 text-white tracking-tighter">
-              Vamos construir o <br/> futuro da sua marca?
-            </h2>
-            <p className="text-xl text-neutral-400 mb-12 max-w-2xl mx-auto">
-              Sua ideia merece uma execução impecável. Entre em contato hoje e receba uma proposta personalizada em até 24h.
-            </p>
-            <button 
-              onClick={() => window.open(whatsappLink, '_blank')}
-              className="px-12 py-6 bg-white text-black text-lg font-bold rounded-full hover:bg-neutral-200 transition-all transform hover:scale-105 shadow-[0_0_40px_rgba(255,255,255,0.2)] flex items-center justify-center gap-3 mx-auto"
-            >
-              <MessageCircle size={24} className="fill-black" /> Começar Agora
-            </button>
-          </RevealOnScroll>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="relative z-10 bg-black border-t border-white/10 pt-16 pb-8 px-6 text-sm">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 mb-12">
-          <div className="text-center md:text-left font-bold text-2xl tracking-tighter">
-            LEV BRANDS
-          </div>
-          <div className="flex gap-6 items-center">
-            <a href="https://github.com/CheckMat007" target="_blank" className="text-neutral-500 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full"><Github size={20} /></a>
-            <a href="https://instagram.com/levbrands" target="_blank" className="text-neutral-500 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full"><Instagram size={20} /></a>
-            <a href="https://linkedin.com/in/gustavolevenhagen" target="_blank" className="text-neutral-500 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full"><Linkedin size={20} /></a>
+          
+          <div className="mt-12 text-center md:hidden">
+            <button className="w-full py-4 border border-slate-200 rounded-xl font-bold text-slate-700">Ver mais projetos</button>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto text-center text-neutral-600 border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p>&copy; {new Date().getFullYear()} LEV BRANDS.</p>
-          <p className="flex items-center gap-2 mt-2 md:mt-0"><Code size={12} /> Desenvolvido com Next.js & Tailwind</p>
+      </section>
+
+      {/* --- O QUE FAZEMOS (Layout Bento Grid) --- */}
+      <section id="servicos" className="py-24 px-6 bg-slate-50 relative overflow-hidden">
+        {/* Background Grid Sutil */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#475569 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
+        
+        <div className="max-w-6xl mx-auto relative z-10">
+          <div className="text-center mb-16 max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Mais do que "apenas um site"</h2>
+            <p className="text-slate-600">Entregamos a infraestrutura digital completa para sua empresa operar profissionalmente.</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Card 1 - Institucional */}
+            <RevealOnScroll className="lg:col-span-2 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:border-blue-300 transition-colors flex flex-col md:flex-row items-center gap-8">
+              <div className="flex-1">
+                <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-4"><Layout /></div>
+                <h3 className="text-xl font-bold text-slate-900 mb-2">Sites Institucionais</h3>
+                <p className="text-slate-600 leading-relaxed">Seu cartão de visitas 24h. Ideal para advogados, clínicas, consultorias e prestadores de serviço que precisam passar credibilidade imediata.</p>
+              </div>
+              <div className="w-full md:w-1/3 bg-slate-50 rounded-lg h-32 border border-slate-100 flex items-center justify-center text-slate-300">
+                <img src="/clinica-demo.png" alt="Site institucional para clínicas" className="object-cover w-full h-full opacity-80" />
+                     
+              </div>
+            </RevealOnScroll>
+
+            {/* Card 2 - Landing Page */}
+            <RevealOnScroll delay={0.1} className="bg-slate-900 p-8 rounded-2xl shadow-xl text-white flex flex-col justify-between">
+              <div>
+                <div className="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center mb-4"><Zap className="text-yellow-400" /></div>
+                <h3 className="text-xl font-bold mb-2">Landing Pages</h3>
+                <p className="text-slate-300 text-sm leading-relaxed">Páginas focadas em uma única ação: venda. Design agressivo para conversão.</p>
+              </div>
+            </RevealOnScroll>
+
+            {/* Card 3 - Sistemas */}
+            <RevealOnScroll delay={0.2} className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:border-blue-300 transition-colors">
+               <div className="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mb-4"><TrendingUp /></div>
+               <h3 className="text-xl font-bold text-slate-900 mb-2">Sistemas Internos</h3>
+               <p className="text-slate-600 text-sm leading-relaxed">Painéis administrativos, CRMs simples e automação de planilhas.</p>
+            </RevealOnScroll>
+
+            {/* Card 4 - SEO & Performance */}
+            <RevealOnScroll delay={0.3} className="lg:col-span-2 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:border-blue-300 transition-colors">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center shrink-0"><Smartphone /></div>
+                <div>
+                   <h3 className="text-xl font-bold text-slate-900 mb-2">Otimização Mobile & SEO</h3>
+                   <p className="text-slate-600 leading-relaxed">Não adianta ter site se ele não abre no celular ou não aparece no Google. Nossos projetos já nascem otimizados para ambos.</p>
+                </div>
+              </div>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
+      {/* --- FAQ --- */}
+      <section id="faq" className="py-24 px-6 bg-white">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-slate-900 mb-4">Dúvidas Frequentes</h2>
+          </div>
+          
+          <div className="space-y-2">
+            <FaqItem 
+              question="Eu preciso pagar mensalidade?"
+              answer="Depende do pacote. O desenvolvimento do site é um valor único. Para manter o site no ar (hospedagem e domínio), existe um custo anual pequeno que é padrão da internet, mas nós cuidamos de toda essa parte técnica para você."
+            />
+            <FaqItem 
+              question="Quanto tempo demora para ficar pronto?"
+              answer="Sites institucionais e Landing Pages levam em média de 7 a 10 dias úteis após o recebimento do material (logo, textos e fotos). Sistemas complexos têm prazos personalizados."
+            />
+            <FaqItem 
+              question="Vocês atendem apenas Manaus?"
+              answer="Não. Embora nossa base seja em Manaus/AM, atendemos clientes do Brasil inteiro. Todas as reuniões e entregas são feitas de forma 100% online e segura."
+            />
+            <FaqItem 
+              question="Consigo atualizar o site sozinho depois?"
+              answer="Sim! Se for uma necessidade sua, configuramos um painel administrativo amigável onde você pode trocar textos e fotos sem precisar entender de código."
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* --- CTA FINAL --- */}
+      <section className="py-20 px-6 bg-slate-900 text-center relative overflow-hidden">
+        {/* Efeitos de fundo */}
+        <div className="absolute top-0 left-0 w-full h-full opacity-20 bg-[linear-gradient(45deg,#1e293b_25%,transparent_25%,transparent_75%,#1e293b_75%,#1e293b),linear-gradient(45deg,#1e293b_25%,transparent_25%,transparent_75%,#1e293b_75%,#1e293b)] bg-size-[20px_20px]"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-125 h-125 bg-blue-600 opacity-20 blur-[120px] rounded-full"></div>
+
+        <div className="max-w-3xl mx-auto relative z-10">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white tracking-tight leading-tight">
+            Vamos tirar essa ideia do papel?
+          </h2>
+          <p className="text-xl text-slate-300 mb-10 max-w-xl mx-auto">
+            Não deixe para depois. Fale comigo agora e receba uma proposta personalizada para o seu momento.
+          </p>
+          <button 
+            onClick={() => window.open(whatsappLink, '_blank')}
+            className="px-10 py-5 bg-blue-600 text-white text-lg font-bold rounded-xl hover:bg-blue-500 hover:scale-105 transition-all shadow-xl shadow-blue-900/50 flex items-center justify-center gap-3 mx-auto"
+          >
+            <MessageCircle className="w-6 h-6" />
+            Iniciar Conversa no WhatsApp
+          </button>
+          <p className="mt-8 text-sm text-slate-500">
+            Resposta rápida • Sem compromisso
+          </p>
+        </div>
+      </section>
+
+      {/* --- FOOTER --- */}
+      <footer className="bg-white text-slate-500 py-12 px-6 border-t border-slate-100">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 text-sm">
+          <div className="flex flex-col items-center md:items-start gap-2">
+            <span className="font-bold text-slate-900">LEV BRANDS</span>
+            <span>&copy; {new Date().getFullYear()} Todos os direitos reservados.</span>
+          </div>
+          <div className="flex gap-8 font-medium">
+            <a href="https://instagram.com/levbrands" target="_blank" className="hover:text-blue-600 transition-colors">Instagram</a>
+            <a href="https://linkedin.com/in/gustavolevenhagen" target="_blank" className="hover:text-blue-600 transition-colors">LinkedIn</a>
+            <a href="https://github.com/CheckMat007" target="_blank" className="hover:text-blue-600 transition-colors">GitHub</a>
+          </div>
         </div>
       </footer>
     </div>
